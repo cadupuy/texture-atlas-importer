@@ -16,18 +16,26 @@ class ImportTextureAtlasOperator(bpy.types.Operator):
     
     def execute(self, context):
         settings = context.scene.texture_atlas_settings
-        json_path = settings.json_path
-        png_path = settings.png_path
+        json_path = bpy.path.abspath(settings.json_path)
+        png_path = bpy.path.abspath(settings.png_path)
         self.import_texture_atlas(json_path, png_path)
         return {'FINISHED'}
     
     def import_texture_atlas(self, json_path, png_path):
-        # Charger le fichier de configuration
-        with open(json_path, 'r') as f:
-            data = json.load(f)
+        try:
+            # Charger le fichier de configuration
+            with open(json_path, 'r') as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            self.report({'ERROR'}, f"JSON file not found: {json_path}")
+            return {'CANCELLED'}
 
-        # Charger l'image de texture
-        texture_image = bpy.data.images.load(png_path)
+        try:
+            # Charger l'image de texture
+            texture_image = bpy.data.images.load(png_path)
+        except RuntimeError:
+            self.report({'ERROR'}, f"PNG file not found: {png_path}")
+            return {'CANCELLED'}
 
         # Créer un matériau avec la texture et gérer la transparence
         material = bpy.data.materials.new(name="AtlasMaterial")
@@ -145,7 +153,7 @@ class TextureAtlasPanel(bpy.types.Panel):
         layout.prop(settings, "png_path")
         layout.prop(settings, "json_path")
         
-        layout.operator("import_texture.atlas", text="Confirmer")
+        layout.operator("import_texture.atlas", text="Confirm")
 
 def register():
     bpy.utils.register_class(ImportTextureAtlasOperator)
