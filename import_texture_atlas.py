@@ -50,7 +50,7 @@ class ImportTextureAtlasOperator(bpy.types.Operator):
         material.node_tree.links.new(bsdf.inputs['Base Color'], tex_image.outputs['Color'])
 
         # Activer la transparence
-        material.blend_method = 'BLEND'
+        material.blend_method = 'CLIP'
         material.shadow_method = 'CLIP'
         bsdf.inputs['Alpha'].default_value = 1
 
@@ -112,7 +112,7 @@ class ImportTextureAtlasOperator(bpy.types.Operator):
             
             # Positionner le plan dans la scène
             plane.location = (pos_x, pos_y, z_index * scale_factor)
-            z_index += 1  # Incrémenter l'index Z pour éviter les chevauchements
+            z_index += 30  # Incrémenter l'index Z pour éviter les chevauchements
 
         # Changer le mode d'affichage pour voir les textures
         for area in bpy.context.screen.areas:
