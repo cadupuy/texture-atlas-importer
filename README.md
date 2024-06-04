@@ -1,7 +1,5 @@
 # Texture Atlas Importer
 
-[Download the addon here](https://github.com/cadupuy/texture-atlas-importer/releases/latest/download/import_texture_atlas.py)
-
 `texture-atlas-importer` is a Blender addon that allows you to import texture atlases and automatically create planes with correctly mapped and positioned textures.
 
 ## Installation
